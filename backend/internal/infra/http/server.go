@@ -15,11 +15,18 @@ type Config struct {
 	Port string
 }
 
+// RouteHandler represents a handler with its HTTP method
+type RouteHandler struct {
+	Pattern string
+	Method  string
+	Handler http.HandlerFunc
+}
+
 // Server represents the HTTP server
 type Server struct {
 	config   Config
 	router   *mux.Router
-	handlers map[string]http.HandlerFunc
+	handlers []RouteHandler
 }
 
 // NewServer creates a new server instance
@@ -27,30 +34,38 @@ func NewServer(config Config) *Server {
 	return &Server{
 		config:   config,
 		router:   mux.NewRouter(),
-		handlers: make(map[string]http.HandlerFunc),
+		handlers: make([]RouteHandler, 0),
 	}
 }
 
-// Handle registers a handler with CORS middleware
-func (s *Server) Handle(pattern string, handler http.HandlerFunc) {
-	s.handlers[pattern] = handler
+// Handle registers a handler with CORS middleware for a specific HTTP method
+func (s *Server) Handle(method, pattern string, handler http.HandlerFunc) {
+	s.handlers = append(s.handlers, RouteHandler{
+		Pattern: pattern,
+		Method:  method,
+		Handler: handler,
+	})
 }
 
 // setupRoutes configures all routes
 func (s *Server) setupRoutes() {
 	// API routes - all API handlers registered without /api prefix
 	apiRouter := s.router.PathPrefix("/api").Subrouter()
-	for pattern, handler := range s.handlers {
+
+	for _, route := range s.handlers {
 		// Skip /health as it should be on root level
-		if pattern == "/health" {
+		if route.Pattern == "/health" {
 			continue
 		}
-		apiRouter.HandleFunc(pattern, corsMiddleware(handler))
+		apiRouter.HandleFunc(route.Pattern, corsMiddleware(route.Handler)).Methods(route.Method)
 	}
 
 	// Health check - outside /api prefix
-	if healthHandler, ok := s.handlers["/health"]; ok {
-		s.router.HandleFunc("/health", corsMiddleware(healthHandler)).Methods("GET")
+	for _, route := range s.handlers {
+		if route.Pattern == "/health" {
+			s.router.HandleFunc("/health", corsMiddleware(route.Handler)).Methods(route.Method)
+			break
+		}
 	}
 
 	// Get frontend path from environment or use default

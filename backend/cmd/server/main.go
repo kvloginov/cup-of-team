@@ -8,6 +8,8 @@ import (
 	api "github.com/kvloginov/cup-of-team/backend/internal/api/handlers"
 	"github.com/kvloginov/cup-of-team/backend/internal/infra/db"
 	"github.com/kvloginov/cup-of-team/backend/internal/infra/http"
+	"github.com/kvloginov/cup-of-team/backend/internal/infra/repository"
+	"github.com/kvloginov/cup-of-team/backend/internal/usecase/team"
 )
 
 func main() {
@@ -30,12 +32,13 @@ func main() {
 	log.Printf("Database initialized at %s", dbPath)
 
 	// Create repository
-	// _ = repository.New(database.DB)
+	repo := repository.New(database.DB)
 
 	// Create usecases
+	teamUsecase := team.NewUsecase(repo)
 
 	// Create handlers
-	handlers := api.NewHandlers()
+	handlers := api.NewHandlers(teamUsecase)
 
 	// Create server
 	server := http.NewServer(http.Config{
@@ -43,9 +46,7 @@ func main() {
 	})
 
 	// Register routes (API routes without /api prefix, it will be added automatically)
-	// server.Handle("/grid", handlers.HandleGrid)
-
-	server.Handle("/health", handlers.HandleHealth)
+	handlers.RegisterRoutes(server)
 
 	// Start server
 	log.Printf("🚀 API server starting on http://localhost:%s", port)
