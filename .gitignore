@@ -1,0 +1,9 @@
+.idea/
+.vscode/
+
+# Mock data (generated, not tracked)
+mock-data/
+backend/__debug_*
+
+# Database
+backend/db/
