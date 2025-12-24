@@ -24,3 +24,16 @@ func NewHandlers(teamUsecase usecase.TeamUsecase) *Handlers {
 func (h *Handlers) HandleHealth(w http.ResponseWriter, r *http.Request) {
 	httpServer.SendJSON(w, http.StatusOK, model.HealthResponse{Status: "ok"})
 }
+
+type Registerer interface {
+	Handle(method, pattern string, handler http.HandlerFunc)
+}
+
+func (h *Handlers) RegisterRoutes(server Registerer) {
+	server.Handle("POST", "/team", h.HandleCreateTeam)
+	server.Handle("GET", "/team", h.HandleGetTeam)
+	server.Handle("POST", "/team/user", h.HandleAddToTeam)
+	server.Handle("DELETE", "/team/user", h.HandleRemoveFromTeam)
+
+	server.Handle("GET", "/health", h.HandleHealth)
+}

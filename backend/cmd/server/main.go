@@ -46,12 +46,7 @@ func main() {
 	})
 
 	// Register routes (API routes without /api prefix, it will be added automatically)
-	server.Handle("POST", "/team", handlers.HandleCreateTeam)
-	server.Handle("GET", "/team", handlers.HandleGetTeam)
-	server.Handle("POST", "/team/user", handlers.HandleAddToTeam)
-	server.Handle("DELETE", "/team/user", handlers.HandleRemoveFromTeam)
-
-	server.Handle("GET", "/health", handlers.HandleHealth)
+	handlers.RegisterRoutes(server)
 
 	// Start server
 	log.Printf("🚀 API server starting on http://localhost:%s", port)
