@@ -5,15 +5,19 @@ import (
 
 	"github.com/kvloginov/cup-of-team/backend/internal/api/model"
 	httpServer "github.com/kvloginov/cup-of-team/backend/internal/infra/http"
+	"github.com/kvloginov/cup-of-team/backend/internal/usecase"
 )
 
 // Handlers holds dependencies for HTTP handlers
 type Handlers struct {
+	teamUsecase usecase.TeamUsecase
 }
 
 // NewHandlers creates a new Handlers instance
-func NewHandlers() *Handlers {
-	return &Handlers{}
+func NewHandlers(teamUsecase usecase.TeamUsecase) *Handlers {
+	return &Handlers{
+		teamUsecase: teamUsecase,
+	}
 }
 
 // HandleHealth handles GET /health

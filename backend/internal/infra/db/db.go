@@ -32,8 +32,26 @@ func New(dataSourceName string) (*DB, error) {
 
 // initSchema creates the necessary tables
 func initSchema(db *sql.DB) error {
-	panic("not implemented")
 	schema := `
+	CREATE TABLE IF NOT EXISTS teams (
+		id TEXT PRIMARY KEY,
+		name TEXT NOT NULL,
+		created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+	);
+
+	CREATE TABLE IF NOT EXISTS users (
+		id TEXT PRIMARY KEY,
+		team_id TEXT NOT NULL,
+		first_name TEXT NOT NULL,
+		initials TEXT,
+		parent_names TEXT,       -- JSON array
+		grandparent_names TEXT,  -- JSON array
+		country TEXT,
+		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE
+	);
+
+	CREATE INDEX IF NOT EXISTS idx_users_team_id ON users(team_id);
 	`
 
 	_, err := db.Exec(schema)
