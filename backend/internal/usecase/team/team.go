@@ -69,7 +69,7 @@ func (u *Usecase) GetTeam(teamID string) (*domain.Team, error) {
 			Initials:          user.Initials,
 			ParentNames:       user.ParentNames,
 			GrandParentsNames: user.GrandParentsNames,
-			Country:           user.Country,
+			Country:           domain.CountryCode(user.Country),
 		}
 	}
 
@@ -107,7 +107,7 @@ func (u *Usecase) AddUser(params usecase.AddUserParams) (*domain.User, error) {
 			Initials:          params.User.Initials,
 			ParentNames:       params.User.ParentNames,
 			GrandParentsNames: params.User.GrandParentsNames,
-			Country:           params.User.Country,
+			Country:           string(params.User.Country),
 			CreatedAt:         existingUser.CreatedAt, // Preserve original creation time
 		}
 
@@ -121,7 +121,7 @@ func (u *Usecase) AddUser(params usecase.AddUserParams) (*domain.User, error) {
 			Initials:          user.Initials,
 			ParentNames:       user.ParentNames,
 			GrandParentsNames: user.GrandParentsNames,
-			Country:           user.Country,
+			Country:           domain.CountryCode(user.Country),
 		}, nil
 	}
 
@@ -133,7 +133,7 @@ func (u *Usecase) AddUser(params usecase.AddUserParams) (*domain.User, error) {
 		Initials:          params.User.Initials,
 		ParentNames:       params.User.ParentNames,
 		GrandParentsNames: params.User.GrandParentsNames,
-		Country:           params.User.Country,
+		Country:           string(params.User.Country),
 		CreatedAt:         time.Now(),
 	}
 
@@ -147,7 +147,7 @@ func (u *Usecase) AddUser(params usecase.AddUserParams) (*domain.User, error) {
 		Initials:          user.Initials,
 		ParentNames:       user.ParentNames,
 		GrandParentsNames: user.GrandParentsNames,
-		Country:           user.Country,
+		Country:           domain.CountryCode(user.Country),
 	}, nil
 }
 
@@ -170,4 +170,3 @@ func (u *Usecase) RemoveUser(teamID, userID string) error {
 
 	return nil
 }
-

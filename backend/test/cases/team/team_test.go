@@ -60,7 +60,7 @@ func (s *TeamTestSuite) TestTeamFullFlow() {
 				Initials:          "JD",
 				ParentNames:       []string{"Michael", "Sarah"},
 				GrandParentsNames: []string{"Robert", "Mary", "James", "Patricia"},
-				Country:           "USA",
+				Country:           domain.CountryCodeUS,
 			},
 		}
 		body, err := json.Marshal(reqBody)
@@ -92,7 +92,7 @@ func (s *TeamTestSuite) TestTeamFullFlow() {
 				Initials:          "JS",
 				ParentNames:       []string{"William", "Linda"},
 				GrandParentsNames: []string{"George", "Barbara", "Richard", "Susan"},
-				Country:           "UK",
+				Country:           domain.CountryCodeUK,
 			},
 		}
 		body, err := json.Marshal(reqBody)
@@ -117,7 +117,7 @@ func (s *TeamTestSuite) TestTeamFullFlow() {
 				Initials:          "JD",
 				ParentNames:       []string{"Michael", "Sarah"},
 				GrandParentsNames: []string{"Robert", "Mary", "James", "Patricia"},
-				Country:           "Canada",
+				Country:           domain.CountryCodeDE,
 			},
 		}
 		body, err := json.Marshal(reqBody)
@@ -137,7 +137,7 @@ func (s *TeamTestSuite) TestTeamFullFlow() {
 
 		s.Equal("user1", resp.User.ID)
 		s.Equal("John Updated", resp.User.FirstName)
-		s.Equal("Canada", resp.User.Country)
+		s.Equal(domain.CountryCodeDE, resp.User.Country)
 	})
 
 	// Step 5: Get Team and Verify All Data
@@ -176,7 +176,7 @@ func (s *TeamTestSuite) TestTeamFullFlow() {
 		s.Equal("JD", user1.Initials)
 		s.Equal([]string{"Michael", "Sarah"}, user1.ParentNames)
 		s.Equal([]string{"Robert", "Mary", "James", "Patricia"}, user1.GrandParentsNames)
-		s.Equal("Canada", user1.Country)
+		s.Equal(domain.CountryCodeDE, user1.Country)
 
 		// Verify second user
 		s.Equal("user2", user2.ID)
@@ -184,7 +184,7 @@ func (s *TeamTestSuite) TestTeamFullFlow() {
 		s.Equal("JS", user2.Initials)
 		s.Equal([]string{"William", "Linda"}, user2.ParentNames)
 		s.Equal([]string{"George", "Barbara", "Richard", "Susan"}, user2.GrandParentsNames)
-		s.Equal("UK", user2.Country)
+		s.Equal(domain.CountryCodeUK, user2.Country)
 	})
 
 	// Step 6: Remove User
