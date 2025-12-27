@@ -21,4 +21,5 @@ type Holiday struct {
 	Description string        `json:"description"`
 	Type        HolidayType   `json:"type"`
 	Countries   []CountryCode `json:"countries"`
+	Stats       Stats         `json:"stats"`
 }

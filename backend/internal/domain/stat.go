@@ -1,6 +1,6 @@
 package domain
 
-type Stat struct {
+type Stats struct {
 	HP            int     `json:"hp"`
 	Damage        int     `json:"damage"`
 	CritChance    float32 `json:"crit_chance"`
